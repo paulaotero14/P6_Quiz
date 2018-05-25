@@ -19,6 +19,7 @@
     "ejs": "~2.5.7",
     "express": "~4.15.5",
     "express-flash": "0.0.2",
+    "express-generator": "^4.15.5",
     "express-partials": "^0.3.0",
     "express-session": "^1.15.6",
     "method-override": "^2.3.10",
