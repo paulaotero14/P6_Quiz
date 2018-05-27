@@ -120,6 +120,11 @@ router.delete('/quizzes/:quizId(\\d+)',
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
+//Atendemos rutas practica6
+router.get('/quizzes/randomplay',  quizController.randomplay);                  //No ponemos quizId porque no estamos atendiendo a ninguno en concreto.
+router.get('/quizzes/randomcheck/:quizId(\\d+)',  quizController.randomcheck);   // Si checkeamos uno en concreto.
+
+
 
 
 router.post('/quizzes/:quizId(\\d+)/tips',

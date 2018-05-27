@@ -225,3 +225,95 @@ exports.check = (req, res, next) => {
         answer
     });
 };
+
+// GET /quizzes/:quizId/randomplay
+exports.randomplay = (req, res, next) => {
+
+    // Array para guardar los id de las preguntas contestadas anteriormente.
+    // Usar el almacén de la sesión (req.session) para guardar el estado del juego. Guardarlo en una propiedad como req.session.randomplay.
+    // Contendrá el estado del juego configurado en las transacciones anteriores y al modificarlo, 
+    // guardará el nuevo estado para que esté disponible en transacciones posteriores. 
+    // Use este array para no repetir preguntas y para saber cuantas preguntas se han contestado.
+
+    if(req.session.randomplay === undefined){
+
+      req.session.randomplay = [];  
+
+    } 
+    
+    Sequelize.Promise.resolve()
+    .then(function() {
+
+        // Volver a mostrar la misma pregunta que la ultima vez que pase por aqui y no conteste
+        // Como se haria esto?????????
+
+        // Elegir una pregunta al azar no repetida:
+        const whereOpt = {'id': {[Sequelize.Op.notIn]: req.session.randomplay}};
+        return models.quiz.count({where: whereOpt})
+        .then(function (count) {
+            return models.quiz.findAll({
+                where: whereOpt,
+                offset: Math.floor(Math.random() * count),
+                limit: 1
+            });
+        })
+        .then(function (quizzes) {
+            return quizzes[0];
+        });
+    })
+    .then(function (quiz) {
+        const score = req.session.randomplay.length;
+        console.log("PUNTUACIONNNNNN PRIMERO" + score);
+        if(quiz){
+            //req.session.randomplay.lastQuizId = quiz.id;
+
+            // Seguimos jugando.
+            res.render('quizzes/random_play', { quiz, score });
+            score = score+1;
+            console.log("PUNTUACION RANDOM PLAY" + score);
+        } else {
+            // Hemos acabado.
+            delete req.session.randomplay;
+            res.render('quizzes/random_nomore', { score });
+        }
+    })
+    .catch(function (error) {
+        next(error);
+    });
+};
+
+// GET + /quizzes/ randomcheck/:quizId?answer=respuesta
+exports.randomcheck = (req, res, next) => {
+
+    // req.query o req.body
+
+   const {quiz, query} = req;
+
+    const answer = query.answer || '';
+
+    
+    const result = answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim();
+
+    if(result){
+
+        //Lo añado al array de ya contestadas.
+        req.session.randomplay.push(quiz.id);
+        // redirijo a random_result.
+        const score = req.session.randomplay.length;
+        console.log("SCOREEEEEEEE" + score);
+        res.render('quizzes/random_result', { score, answer, result});
+        
+
+    } else {
+
+        // Si es falsa, no la incluye como contestada.
+          req.session.randomplay = [];
+
+          const score = req.session.randomplay.length;
+
+          res.render('quizzes/random_result', { score, answer, result });
+        }
+
+
+
+};

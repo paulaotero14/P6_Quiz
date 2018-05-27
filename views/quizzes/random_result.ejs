@@ -1,0 +1,26 @@
+<h1>
+    Random Result:
+</h1>
+
+<p>
+    La puntuación es: <%= score %> .
+</p>
+
+<p>
+    The answer <strong> <%= answer %> </strong> is <%= result ? 'Right' : 'Wrong' %>.
+</p>
+
+<p>
+    <% if (!result) { %>
+
+       <a href="/quizzes"> Has acabado! </a>
+
+    <% } else { %>
+
+    	<a href="/quizzes/randomplay"> Continua! </a>
+
+     <% } %>
+
+</p>
+
+<a href="/quizzes"><button>Go back</button></a>
