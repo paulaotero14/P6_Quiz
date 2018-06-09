@@ -104,6 +104,7 @@ router.get('/quizzes/new',
 router.post('/quizzes',
     sessionController.loginRequired,
 	quizController.create);
+//Practica 8 (Ya esta escrito, no lo he escrito yo).
 router.get('/quizzes/:quizId(\\d+)/edit',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
@@ -112,6 +113,18 @@ router.put('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
 	quizController.update);
+
+//Nuevas de la practica8: Routes for the resource /tips
+router.get('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/edit',
+    sessionController.loginRequired,
+    tipController.adminOrAuthorRequired,
+    tipController.edit);
+router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
+    sessionController.loginRequired,
+    tipController.adminOrAuthorRequired,
+    tipController.update);
+
+
 router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
