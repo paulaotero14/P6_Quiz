@@ -24,11 +24,7 @@ exports.adminOrAuthorRequired = (req, res, next) => {
     const isAdmin  = !!req.session.user.isAdmin;
     const isAuthor = req.tip.authorId === req.session.user.id;
 
-    if (isAdmin || isAuthor) {
-        next();
-    } else {
-        res.send(403);
-    }
+    
 };
 
 
